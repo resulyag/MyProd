@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -7,48 +7,77 @@ import {
   Text,
   useColorScheme,
   TouchableOpacity,
+  TextInput,
   View,
-} from "react-native";
+  FlatList,
+} from 'react-native';
 
-import FirstComponent from "./FirstComponent";
+import ItemList from './ItemList';
 
 export default class App extends Component {
   constructor() {
     super();
     this.state = {
-      name: "Resul Yağ",
-      year: 1999,
+      text: '',
+      data: [],
     };
   }
 
-  changeState = () => {
-    this.setState({
-      name: "ali veli",
-      year: 1875,
-    },()=>alert('Bilgiler Güncellendi'));
+  handleSave = () => {
+    const {text, data} = this.state;
+    {
+      text != '' && data.push({text});
+    }
+    this.setState({data, text: ''});
   };
 
   render() {
-    const { name, year } = this.state;
+    const {text, data} = this.state;
     return (
-      <View style={{ flex: 1 }}>
-        <View style={[{ marginTop: 100 }]}>
-          <Text style={{ fontSize: 25 }}>{name + " " + year}</Text>
+      <View style={{flex: 1}}>
+        <View style={styles.title}>
+          <Text style={styles.title_text}>To-Do Application</Text>
         </View>
-        <View style={[{ marginTop: 100 }]}>
-          <TouchableOpacity
-            style={{ alignItems: "center" }}
-            onPress={() => this.changeState()}>
-            <Text style={{ fontSize: 25 }}>Değiştir</Text>
+        <View
+          style={{backgroundColor: '#ccc', padding: 10, flexDirection: 'row'}}>
+          <TextInput
+            style={styles.inpt}
+            value={text}
+            onChangeText={text => {
+              this.setState({text});
+            }}
+          />
+          <TouchableOpacity onPress={this.handleSave} style={styles.btn}>
+            <Text style={styles.title_text}>Ekle</Text>
           </TouchableOpacity>
         </View>
+        <ScrollView style={{height: 100, maxHeight: '70%'}}>
+          {data.map(item => {
+            return <ItemList text={item.text} />;
+          })}
+        </ScrollView>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  welcome_area: {
+  title: {backgroundColor: 'blue', padding: 10},
+  title_text: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  inpt: {
+    padding: 10,
+    backgroundColor: 'white',
     flex: 1,
+  },
+  btn: {
+    padding: 10,
+    backgroundColor: 'blue',
+    borderRadius: 5,
+    marginLeft: 10,
   },
 });
